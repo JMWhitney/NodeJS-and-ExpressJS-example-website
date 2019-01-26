@@ -12,7 +12,7 @@ const speakerService = new SpeakerService(config.data.speakers);
 //Set the template engine to pug
 app.set('view engine', 'pug');
 
-//sent html source is minified by default.
+//sent html source is minified in production.
 //If we are developing, we want to include whitespace
 //For debugging
 if (app.get('env') === 'development') {
@@ -47,7 +47,11 @@ app.use(async (req, res, next) => {
     }
 });
 
-app.use('/', routes());
+app.use('/', routes({
+    //if key and value are the same this is a shortcut 
+    //(i.e. speakerService: speakerService)
+    speakerService
+}));
 
 app.use((req, res, next) => {
     return next(createError(404, 'file not found'));

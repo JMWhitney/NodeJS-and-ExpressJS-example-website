@@ -14,15 +14,36 @@ class SpeakerService {
     const data = await this.getData();
 
     return data.map((speaker) => {
-      return { name: speaker.name, shortname: speaker.shortname }
+      return { name: speaker.name, shortname: speaker.shortname };
     });
   }
 
   async getListShort() {
     const data = await this.getData();
     return data.map((speaker) => {
-      return { name: speaker.name, shortname: speaker.shortname, title: speaker.title }
+      return { name: speaker.name, shortname: speaker.shortname, title: speaker.title };
     });
+  }
+
+  async getList() {
+    const data = await this.getData();
+    return data.map((speaker) => {
+      return { name: speaker.name, shortname: speaker.shortname, title: speaker.title, summary: speaker.summary };
+    });
+  }
+
+  async getAllArtwork() {
+    //Iterate through the returned artwork pieces
+    //and accumulate them into one array
+    const data = await this.getData();
+    const artwork = data.reduce((acc, elm) => {
+      if (elm.artwork) {
+        acc = [...acc, ...elm.artwork];
+      }
+      return acc;
+      //Initialize accumulator in second argument  
+    }, []);
+    return artwork
   }
 
   async getData() {
