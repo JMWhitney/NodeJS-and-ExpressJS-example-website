@@ -1,13 +1,16 @@
 const express = require('express');
 const createError = require('http-errors');
 const path = require('path');
+const bodyParser = require('body-parser');
 const configs = require('./config');
 const SpeakerService = require('./services/SpeakerService');
+const FeedbackService = require('./services/FeedbackService');
 const app = express();
 
 const config = configs[app.get('env')];
 
 const speakerService = new SpeakerService(config.data.speakers);
+const feedbackService = new FeedbackService(config.data.feedback);
 
 //Set the template engine to pug
 app.set('view engine', 'pug');
@@ -32,6 +35,10 @@ app.use((req, res, next) => {
 //NodeJS will automatically default to the index file if no file is specified.
 const routes = require('./routes');
 app.use(express.static('public'));
+
+//middleware to parse http bodies
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.get('/favicon.ico', (req, res, next) => {
     return res.sendStatus(204);
 });
@@ -50,7 +57,8 @@ app.use(async (req, res, next) => {
 app.use('/', routes({
     //if key and value are the same this is a shortcut 
     //(i.e. speakerService: speakerService)
-    speakerService
+    speakerService,
+    feedbackService,
 }));
 
 app.use((req, res, next) => {

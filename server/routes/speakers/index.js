@@ -34,10 +34,33 @@ module.exports = (param) => {
         }
     });
 
-    router.get('/:name', (req, res, next) => {
-        return res.render('speakers/detail', {
-            page: req.params.name,
-        });
+    router.get('/:name', async (req, res, next) => {
+        try {
+
+            //Retrieve speaker information asynchronously
+            const promises = [];
+            promises.push(speakerService.getSpeakerByShortname(req.params.name));
+            promises.push(speakerService.getArtworkForSpeaker(req.params.name));
+
+            const results = await Promise.all(promises);
+
+            //User could enter garbage into the URL.
+            //We want to display them a standard 404 error page in this instance
+            if (!results[0]) {
+                return next();
+            }
+
+            //Route speaker information to speaker detail page
+            return res.render('speakers/detail', {
+                page: req.params.name,
+                speaker: results[0],
+                artwork: results[1],
+            });
+
+        } catch (err) {
+            return next(err);
+        }
+
     });
 
     return router;
