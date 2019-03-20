@@ -1,8 +1,10 @@
 extends layout/index
+
 block speakerslist
-  include includes/speakerslist
-block content
-  #home.container
+  include includes/speakerslist.pug
+  
+block content      
+  .container#home
     .row
       .col-sm-8
         .maincontent
@@ -29,5 +31,16 @@ block content
               | . If you're in FaceBook, you can also
               a(href='http://www.facebook.com/rouxmeet') join our FaceBook group
               | .
-
-      include includes/sidebar
+          // article
+          article.article
+            h1.article-title Who should come?
+            ul
+              li Anybody interested in art and the creative industry
+              li Painters, sculptors, photographers and graphic artists
+              li
+                | Those interested in meeting and making a connection with others in the local art scene.
+          // article
+      // primary
+      aside.col-sm-4
+        if artwork
+          include includes/artwork

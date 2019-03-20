@@ -2,46 +2,25 @@ const express = require('express');
 
 const router = express.Router();
 
-//NodeJS will automatically default to the index file if no file is specified.
-const speakerRoute = require('./speakers');
+// Require the index file
+const speakersRoute = require('./speakers');
 const feedbackRoute = require('./feedback');
+const usersRoute = require('./users');
 
-module.exports = (param) => {
+module.exports = (params) => {
+  // Destructuring assignment
+  const { speakers } = params;
 
-    const { speakerService } = param;
+  // Now let's define the index route and mount it on slash.
+  router.get('/', async (req, res) => {
+    const speakerslist = await speakers.getListShort();
+    const artwork = await speakers.getAllArtwork();
+    return res.render('index', { page: 'Home', speakerslist, artwork });
+  });
 
-    router.get('/', async (req, res, next) => {
-        try {
-
-            /*This method runs the promises one after the other.
-            There can be performance penalties for doing so.
-            Instead we want to run the promises in parallel. */
-
-            // const speakersList = await speakerService.getListShort();
-            // const artwork = await speakerService.getAllArtwork();
-
-            //This method runs the promises in parallel
-            //Which in general is the faster way to do so.
-            const promises = [];
-            promises.push(speakerService.getListShort());
-            promises.push(speakerService.getAllArtwork());
-
-            const results = await Promise.all(promises);
-
-            return res.render('index', {
-                page: 'Home',
-                speakersList: results[0],
-                artwork: results[1],
-            });
-
-        } catch (err) {
-            return next(err);
-        }
-
-    });
-
-    router.use('/speakers', speakerRoute(param));
-    router.use('/feedback', feedbackRoute(param));
-
-    return router;
+  // And mount it to the path speakers.
+  router.use('/speakers', speakersRoute(params));
+  router.use('/feedback', feedbackRoute(params));
+  router.use('/users', usersRoute(params));
+  return router;
 };

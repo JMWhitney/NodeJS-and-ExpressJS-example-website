@@ -5,14 +5,17 @@ const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 
 class FeedbackService {
-  //This is essentially a stand in for a database.
-  //Instead we will be retrieving data from a pre-supplied JSON file
   constructor(datafile) {
     this.datafile = datafile;
   }
 
-  async addEntry(name, title, message) {
+  async getList() {
     const data = await this.getData();
+    return data;
+  }
+
+  async addEntry(name, title, message) {
+    const data = await this.getData() || [];
     data.unshift({ name, title, message });
     return writeFile(this.datafile, JSON.stringify(data));
   }

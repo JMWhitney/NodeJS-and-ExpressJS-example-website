@@ -1,6 +1,7 @@
 extends ../layout/index
-block content 
-  #speakerList.container
+
+block content      
+  .container#speakerList
     .row
       .col-sm-8
         article.speakerslist
@@ -16,6 +17,8 @@ block content
                     a(href=`/speakers/${speaker.shortname}`)
                       img.speakerslist-img.img-circle.pull-left(src=`/images/speakers/${speaker.shortname}_tn.jpg`, alt=`Photo of ${speaker.name}`)
                     | #{speaker.summary}
-      aside.col-sm-4
-        article.sidebar
+
+      if artwork
+        aside.col-sm-4
           include ../includes/artwork
+        

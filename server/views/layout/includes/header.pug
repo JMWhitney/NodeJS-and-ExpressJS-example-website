@@ -9,13 +9,13 @@ header
           span.icon-bar
           span.icon-bar
           span.icon-bar
-        a.navbar-brand(href='/')=title
+        a.navbar-brand(href='/') #{title}
       #navbar-collapse.collapse.navbar-collapse
         ul.nav.navbar-nav.navbar-right
           li
             a(href='/') Home
           li
-            a.dropdown-toggle(href='./speakers.html', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+            a.dropdown-toggle(href='/speakers', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
               | Speakers
               span.caret
                 span
@@ -28,6 +28,28 @@ header
                   a(href=`/speakers/${speaker.shortname}`)=speaker.name
           li
             a(href='/feedback') Feedback
-        // nav
-        // navbar-collapse
-        // container
+
+          li
+            a.dropdown-toggle(href='/users', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+              if user
+                if(user.avatar)
+                  img.img-responsive.usertn(src=`/users/avatartn/${user.avatar}`)
+                else 
+                  | #{user.username}
+                  span.caret
+                    span
+              else
+                | Account  
+                span.caret
+                  span
+            ul.dropdown-menu
+              if (!user)  
+                li
+                  a(href=`/users/registration`) Register
+                li
+                  a(href=`/users/login`) Login
+              else
+                li
+                  a(href=`/users/account`) My Account
+                li
+                  a(href=`/users/logout`) Logout                       
