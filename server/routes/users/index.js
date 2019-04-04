@@ -67,7 +67,7 @@ module.exports = (params) => {
 
   router.get('/avatartn/:filename', async (req, res) => {
     res.type('png');
-    const tn = await avatars.tumbnail(req.params.filename);
+    const tn = await avatars.thumbnail(req.params.filename);
     return res.end(tn, 'binary');
   })
 
